@@ -1,0 +1,123 @@
+<h1> Scratch Paper </h1>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Canvas Drawing</title>
+</head>
+<body>
+<p>Width: <input id="setWidth" placeholder="Enter width"/> </p>
+<p>Height: <input id="setHeight" placeholder="Enter height"/> </p>
+
+ <input type="color" id="setColor" onchange="docolor()"/>
+Radius:  <output id="radiusOutput">10</output> <input type=range min="1" max="45" value="5" id="setRadius" oninput="setRadius()"/>
+ 
+  
+  <canvas id="canvas1" width="300" height="150" style="border:1px solid black;"></canvas>
+  
+ <p><button onclick="clearCanvas()">Clear</button></p>
+
+  <script>
+    var paintcanvas = document.getElementById("canvas1");
+    var context = paintcanvas.getContext("2d");  // ✅ Ensure context is defined
+
+    var color = 'black';
+    var radius = 5;
+    var isPainting = false;
+
+const widthInput = document.getElementById("setWidth");
+const heightInput = document.getElementById("setHeight");
+const radiusInput = document.getElementById("setRadius");
+const colorInput = document.getElementById("setColor");
+const radiusOutput = document.getElementById("radiusOutput");
+ 
+    
+    function setWidth() {
+      let value = widthInput.value;
+
+      if (isNumeric(value)) { 
+        paintcanvas.width = Number(value);  // ✅ Update correct canvas
+        context.putImageData(savedImage,0,0);        
+        console.log("Canvas width set to:", paintcanvas.width);
+      } else {
+        console.log("Invalid input: Not a number");
+      }
+    }
+    
+    function setHeight() {
+      let value = heightInput.value;
+
+      if (isNumeric(value)) { 
+       paintcanvas.height = Number(value); 
+       context.putImageData(savedImage,0,0); 
+       console.log("Canvas height set to:", paintcanvas.height);
+      } else {
+        console.log("Invalid input: Not a number");
+      }
+    }
+
+    function isNumeric(value) {
+      return !isNaN(value) && value.trim() !== "";
+    }
+
+    function setRadius(){
+      let value = radiusInput.value;
+      radius = Number(value);
+      
+      radiusOutput.textContent = value;
+      console.log("Radius set to:", radius);
+    }
+    
+    function setColor(){
+      let value = colorInput.value;
+      color = value;
+      console.log("Color set to:", color);
+    }
+    
+   widthInput.addEventListener("input", setWidth);
+   heightInput.addEventListener("input", setHeight);
+   radiusInput.addEventListener("input", setRadius);
+   colorInput.addEventListener("change", setColor);
+   
+    
+ 
+
+    function clearCanvas() {
+      context.clearRect(0, 0, paintcanvas.width, paintcanvas.height);
+    }
+    
+    function paintCircle(x, y) {
+      context.beginPath();
+      context.arc(x, y, radius, 0, Math.PI * 2, true);
+      context.fillStyle = color;
+      context.fill();
+    }
+
+    // Mouse event to paint circles
+    paintcanvas.addEventListener("mousemove", function(event) {
+      if (isPainting) {
+        paintCircle(event.offsetX, event.offsetY);
+      }
+    });
+
+    paintcanvas.addEventListener("mousedown", function() {
+      isPainting = true;
+    });
+
+    paintcanvas.addEventListener("mouseup", function() {
+      isPainting = false;
+    });
+
+  </script>
+  
+  <style>
+    canvas{
+    border: 1px solid lightgray;
+    max-width: 100%;
+    display: block;
+    object-fit: contain;
+    margin-bottom: 20px;
+}
+  </style>
+</body>
+</html>
